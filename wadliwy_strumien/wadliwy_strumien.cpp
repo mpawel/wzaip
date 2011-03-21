@@ -33,7 +33,7 @@ struct kmp {
 
     bool push (char c) {
 	while(q && bad[q+1]!=c ) {
-	    q=bad[q];
+	    q=pref[q];
 	    }
 	if(bad[q+1]==c)
 	    q=q+1;
@@ -49,12 +49,6 @@ struct kmp {
 
 };
 
-int compare (const void * a, const void * b)
-{
-  return strcmp( (*(kmp*)a).bad , (*(kmp*)b).bad );
-}
-
-
 kmp kmps[16];
 int kmp_ok;
 int main () {
@@ -63,14 +57,13 @@ int main () {
     scanf("%d\n",&fail_n);
 
     for ( int i=0; i<fail_n; i++) {
-	char *p = new char[10005];
+	char *p = new char[1005];
 	scanf("%s\n",p+1);
 	p[0]=0;
 	int n=strlen(p+1);
 	kmps[i].cperf(p,n);
 	}
 
-    qsort(kmps,fail_n,sizeof(kmp),compare);
     char c;
     c=getchar();
 
@@ -78,7 +71,8 @@ int main () {
 	kmp_ok =0;
 	for ( int i=0; i<fail_n; i++) {
 	    if (kmps[i].push(c)) {
-		kmp_ok+=1<<i;
+		kmp_ok++;
+		break;
 		}
 	    }
 	    if (kmp_ok) {
@@ -90,6 +84,7 @@ int main () {
 
 	c=getchar();
 	}
+    putchar('\n');
 
 
     return 0;
