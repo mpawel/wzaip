@@ -1,0 +1,3 @@
+
+SOURCES += \
+    banki.cpp
