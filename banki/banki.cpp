@@ -4,71 +4,56 @@
 #include <stdint.h>
 
 using namespace std;
-//pierwszy bank kretydowy
-//kolorujemy poczawszy od kredytowego
 
 
-void dfs_visit(vector<int> * G, int n, int visited[], uint64_t& t, int start);
-int * dfs (vector<int> * G, int n) {
-    int *visited = new int[n];
-    for ( int b =0; b<n; b++)visited[b]=0;
-    uint64_t t=0;
-     //0 -kredytowy 1- drugi
-    for ( int i=0; i<n; i++) {
-	if ( visited[i] == 0) {
-	    dfs_visit(G,n,visited,t, i);
-	    }
+void dfs_visit (vector<int32_t>const graf[],int8_t colors[],int32_t v, int8_t c) {
+    colors[v]=c;
+    for (uint32_t i=0; i<graf[v].size(); i++) {
+	uint32_t u =graf[v].at(i);
+	if (colors[u] == 0) {
+	    dfs_visit (graf,colors,u,(c==1?2:1));
 	}
-
-    return  visited;
+    }
 }
 
-void dfs_visit(vector<int> * G, int n, int visited[], uint64_t& t, int start) {
-
-    visited[start]= (t%2)+1;
-    t++;
-    for ( uint32_t i=0; i<G[start].size(); i++) {
-
-	if (visited[G[start][i]] == 0)
-	    dfs_visit(G,n,visited,t,G[start][i]);
-
-	}
-
-}
 
 int main () {
     int test_n;
     scanf("%d",&test_n);
-    for  ( int i=0; i< test_n; i++) {
+    for  ( int t=0; t< test_n;t++) {
 	int p;
-	int * vert_st;
 	int n,m;
 	scanf("%d %d %d",&n,&m,&p);
-	n++;
-	vector<int> * G = new vector<int>[n];
-	vert_st = new int[n];
+	vector<int> *G = new vector<int>[n];
+	int8_t visited[n];
+	memset(visited,0,n);
 	for ( int j=0; j<m; j++) {
 	    int v,u;
 	    scanf("%d %d",&u, &v);
+		    v--; u--;
 	    G[u].push_back(v);
 	    G[v].push_back(u);
-	    }
+	}
 
-	int * bank_type = dfs(G,n);
+	dfs_visit(G,visited,0, 1);
 	int sum =0;
 	bool flag=true;
-	for ( int k=0; k<n; k++) {
-	    if ( bank_type[k] == 0) {
-		flag=false;
-		break;
-		}
+
+	for ( int_fast16_t i=0; i<n; i++) {
+	    int_fast16_t diff=0;
+	    for ( int_fast16_t j=0; j<G[i].size(); j++) {
+		if (visited[i] == visited[G[i][j]])
+	    diff++;
 	    }
+	    if (diff > 0) flag=false;
+	}
+
 
 	if ( flag == true) {
-	for ( int k =0; k<n; k++) {
-	    if (bank_type[k]==2) {
-		//vert_st > p
-		if (vert_st[k] > p) {
+	for ( int_fast16_t k =0; k<n; k++) {
+	    if (visited[k]==2) {
+
+		if (G[k].size() > p) {
 		   sum++;
 		    }
 		}
@@ -76,8 +61,7 @@ int main () {
 
 	printf("%d\n",sum);
 	} else printf ("NIELEGALNE\n");
-	delete [] bank_type;
-	delete [] G;
+	delete []G;
 	}
 	return 0;
 }

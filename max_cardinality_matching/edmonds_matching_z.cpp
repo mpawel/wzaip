@@ -188,7 +188,7 @@ int ss(int v, int w) {
 
 
 bool augment() {
-
+    parent = UnionFind(this->size);
     T.clear(); //odd level of tree
     S.clear(); //even level of tree
     unexplored.clear();
