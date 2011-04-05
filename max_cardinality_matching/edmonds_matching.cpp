@@ -254,34 +254,35 @@ vector<int> Edmonds_matching(vector<int> *G, const int size) {
 }
 };
 
-typedef std::vector<std::vector<int> > Graph;
 
 int main() {
     vector<int> * G;
-    Edmonds env;    stdin=fopen("work_scheduling","r");
-    int N, C;
-    scanf("%u", &N);
-
-    G = new vector<int>[N];
-    for(unsigned int i, j; ~scanf("%u %u", &i, &j);) {
+    Edmonds ed;
+    int n, e;
+    scanf("%d", &n);
+    n++;
+    G = new vector<int>[n];
+    uint i,j;
+    while ( scanf("%u %u", &i, &j) > 0 ){
 	if(i != j) {
-	    i--;j--;
 	    G[i].push_back(j);
 	    G[j].push_back(i);
 	}
     }
-    C = 0;
-    env.Edmonds_matching(G,N);
 
-    for(unsigned int i = 0; i < N; ++i) {
-	C += (env.matching[i] != -1);
+    e = 0;
+    ed.Edmonds_matching(G,n);
+
+    for(unsigned int i = 1; i < n; ++i) {
+	e += (ed.matching[i] != -1);
     }
-    printf("%u\n", C);
-    for(uint i = 0; i < N; ++i) {
-	if(env.matching[i] != -1 && i < (uint) env.matching[i]) {
-	    printf("%d %d\n", i, env.matching[i]);
+    printf("%d\n", e);
+
+    for(uint i = 1; i < n; ++i) {
+	if(ed.matching[i] != -1 && i < (uint) ed.matching[i]) {
+	    printf("%d %d\n", i, ed.matching[i]);
 	}
     }
-    return EXIT_SUCCESS;
+    return 0;
 }
 
